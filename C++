@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip> // For std::hex, std::setw, std::setfill
+#include <sstream> // For std::stringstream
+
+// Simplified SHA256-like hashing for demonstration purposes.
+// **In a real application, you would use a robust, well-vetted cryptographic library**
+// like OpenSSL, Crypto++, or a platform's built-in crypto API (e.g., Common Crypto on macOS, CNG on Windows).
+// This is NOT secure or suitable for production.
+std::string simple_hash_sha256_mock(const std::string& data) {
+    long long hash_val = 0;
+    for (char c : data) {
+        hash_val = (hash_val * 31 + c) % 1000000007; // A simple polynomial rolling hash
+    }
+
+    std::stringstream ss;
+    ss << std::hex << std::setw(64) << std::setfill('0') << hash_val; // Format to typical SHA256 length
+    return ss.str();
+}
+
+
+// Class to manage consent document integrity
+class ConsentIntegrityManager {
+public:
+    // This would typically involve hashing the *actual* document file content (e.g., PDF bytes)
+    // rather than just a string summary.
+    std::string generateDocumentHash(const std::string& documentContent) const {
+        // In a real system: read file bytes, then hash using a proper SHA256/SHA512 algorithm
+        std::string hash = simple_hash_sha256_mock(documentContent);
+        std::cout << "Generated hash for document content: " << hash << std::endl;
+        return hash;
+    }
+
+    // When consent is given, store the document hash with the consent record.
+    // Later, you can verify it by re-hashing the document content and comparing.
+    bool verifyDocumentHash(const std::string& currentDocumentContent, const std::string& storedHash) const {
+        std::string rehashedContent = generateDocumentHash(currentDocumentContent);
+        bool match = (rehashedContent == storedHash);
+        std::cout << "Verifying hash: " << (match ? "MATCH" : "MISMATCH") << std::endl;
+        return match;
+    }
+};
+
+int main() {
+    ConsentIntegrityManager cim;
+
+    // Simulate content of an ICF
+    std::string icfContentV1 =
+        "Purpose of the study: Investigate Drug A. Risks: Nausea, headache. Voluntary participation.";
+
+    std::string icfContentV2 =
+        "Purpose of the study: Investigate Drug A. Risks: Nausea, headache, *new risk: dizziness*. Voluntary participation.";
+
+    // Hash the content when a version is approved/finalized
+    std::string hashV1 = cim.generateDocumentHash(icfContentV1);
+    std::string hashV2 = cim.generateDocumentHash(icfContentV2);
+
+    std::cout << "\n--- Simulating Consent Recording ---\n";
+    std::string participantId = "P-789";
+    std::string consentedIcfVersionHash = hashV1; // This is the hash of the document the participant saw and signed
+
+    // Store participantId, actual signature data, timestamp, and consentedIcfVersionHash in your database
+
+    std::cout << "\n--- Simulating Audit/Verification ---\n";
+    // Later, if you need to audit, you retrieve the ICF content for that version and compare its hash
+    // to the one stored with the consent.
+    std::cout << "Verifying P-789's consent against original V1 content:\n";
+    cim.verifyDocumentHash(icfContentV1, consentedIcfVersionHash);
+
+    // What if the content was secretly altered?
+    std::string tamperedIcfContent =
+        "Purpose of the study: Investigate Drug A. Risks: Nausea, headache. Voluntary participation. *hidden clause: give us your firstborn*";
+    std::cout << "Verifying P-789's consent against tampered content:\n";
+    cim.verifyDocumentHash(tamperedIcfContent, consentedIcfVersionHash); // Should mismatch!
+
+    return 0;
+}
