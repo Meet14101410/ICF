@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Informed Consent Form</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f0f2f5; color: #333; }
+        .consent-container { max-width: 900px; margin: 30px auto; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 40px; }
+        h1, h2 { color: #0056b3; text-align: center; margin-bottom: 25px; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fdfdff; }
+        .section h3 { color: #007bff; margin-top: 0; border-bottom: 1px solid #dcdcdc; padding-bottom: 10px; margin-bottom: 15px; }
+        p { line-height: 1.8; margin-bottom: 15px; text-align: justify; }
+        ul { list-style-type: disc; margin-left: 20px; margin-bottom: 15px; }
+        ol { list-style-type: decimal; margin-left: 20px; margin-bottom: 15px; }
+        .important { color: #d9534f; font-weight: bold; }
+        .signature-area { margin-top: 40px; padding: 25px; background-color: #e6f7ff; border: 1px dashed #a8d9ff; border-radius: 8px; text-align: center; }
+        .signature-area label { display: block; margin-bottom: 15px; font-weight: bold; font-size: 1.1em; color: #0056b3; }
+        input[type="text"]#signatureInput {
+            width: 70%; padding: 12px; border: 2px solid #007bff; border-radius: 5px;
+            font-size: 1.1em; text-align: center; font-family: 'Dancing Script', cursive; /* Example font for signature look */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #28a745; color: white; padding: 15px 30px; border: none;
+            border-radius: 5px; cursor: pointer; font-size: 1.2em; margin-top: 30px;
+            transition: background-color 0.3s ease; display: block; width: 100%;
+        }
+        button:hover { background-color: #218838; }
+        .disclaimer { font-size: 0.85em; color: #777; margin-top: 20px; text-align: center; }
+        .version-info { text-align: right; font-size: 0.9em; color: #555; margin-top: 10px; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="consent-container">
+        <h1>Informed Consent Form</h1>
+        <h2>[Trial Name: Investigating Novel Drug X for Condition Y]</h2>
+        <div class="version-info">Version: 2.1 | Approval Date: 2025-06-15</div>
+
+        <div class="section">
+            <h3>1. Purpose of the Study</h3>
+            <p>You are being asked to participate in a research study to investigate the safety and effectiveness of a new investigational drug, &quot;Drug X,&quot; for the treatment of Condition Y. This study aims to determine if Drug X can improve symptoms of Condition Y compared to a placebo or standard treatment.</p>
+            <p>This study is sponsored by [Sponsor Name].</p>
+        </div>
+
+        <div class="section">
+            <h3>2. Study Procedures</h3>
+            <p>If you decide to participate, you will undergo a screening phase, followed by a treatment phase lasting approximately 12 weeks, and a follow-up phase of 4 weeks. This will involve:</p>
+            <ul>
+                <li>Initial health assessment and blood tests.</li>
+                <li>Randomization to receive either Drug X or a placebo.</li>
+                <li>Daily administration of the study drug/placebo.</li>
+                <li>Regular clinic visits (e.g., every 2 weeks) for physical exams, blood draws, and symptom evaluations.</li>
+                <li>Completion of questionnaires regarding your health and symptoms.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>3. Risks and Discomforts</h3>
+            <p class="important">Participation in this study may involve risks, including:</p>
+            <ul>
+                <li><strong>Drug X side effects:</strong> (e.g., Nausea, headaches, fatigue, allergic reactions, [list common and serious known side effects]).</li>
+                <li><strong>Blood draws:</strong> Minor pain, bruising, or rare infection at the site.</li>
+                <li><strong>Confidentiality risks:</strong> Although measures will be taken, there is a minimal risk of a breach of your personal health information.</li>
+            </ul>
+            <p>A full list of potential risks will be discussed with you by the study team.</p>
+        </div>
+
+        <div class="section">
+            <h3>4. Benefits</h3>
+            <p>You may or may not directly benefit from participating in this study. However, the information gained from this study may help future patients with Condition Y.</p>
+        </div>
+
+        <div class="section">
+            <h3>5. Alternatives to Participation</h3>
+            <p>You may choose not to participate in this study. Alternative treatments for Condition Y, if available, will be discussed with you by your physician.</p>
+        </div>
+
+        <div class="section">
+            <h3>6. Confidentiality</h3>
+            <p>Your medical records and research data will be kept confidential to the extent permitted by law. Your identity will not be revealed in any publications or presentations. Data will be de-identified where possible.</p>
+        </div>
+
+        <div class="section">
+            <h3>7. Voluntary Participation and Withdrawal</h3>
+            <p class="important">Your participation in this study is completely voluntary. You may refuse to participate or withdraw from the study at any time, for any reason, without penalty or loss of benefits to which you are otherwise entitled.</p>
+        </div>
+
+        <div class="section">
+            <h3>8. Contact Information</h3>
+            <p>For questions about the study, contact [Investigator Name] at [Phone Number]. For questions about your rights as a research participant, contact [IRB/Ethics Committee Name] at [Phone Number].</p>
+        </div>
+
+        <div class="signature-area">
+            <p>By typing your full name below, you confirm that you have read and understood the information provided in this Informed Consent Form, had the opportunity to ask questions, and voluntarily agree to participate in this research study.</p>
+            <label for="signatureInput">Type Full Name to Consent:</label>
+            <input type="text" id="signatureInput" name="participantSignature" placeholder="Type your full name here" required>
+            <input type="hidden" id="consentDate" name="consentDate">
+            <input type="hidden" id="consentTime" name="consentTime">
+            <input type="hidden" id="ipAddress" name="ipAddress">
+            <input type="hidden" id="browserInfo" name="browserInfo">
+            <input type="hidden" id="icfVersion" name="icfVersion" value="2.1">
+
+            <button type="button" onclick="submitConsent()">I Consent to Participate</button>
+            <p class="disclaimer">Note: This is a simulated electronic signature. A real eConsent system requires robust security, authentication, and compliance with regulatory standards (e.g., 21 CFR Part 11).</p>
+        </div>
+    </div>
+
+    <script>
+        function submitConsent() {
+            const signatureInput = document.getElementById('signatureInput').value.trim();
+            if (!signatureInput) {
+                alert('Please type your full name to consent.');
+                return;
+            }
+
+            // In a real eConsent system, this would gather more data and send to a secure backend
+            const consentDate = new Date();
+            document.getElementById('consentDate').value = consentDate.toISOString().slice(0, 10); // YYYY-MM-DD
+            document.getElementById('consentTime').value = consentDate.toTimeString().slice(0, 8); // HH:MM:SS
+
+            // Simulate capturing IP and browser info (requires backend or more complex JS)
+            document.getElementById('ipAddress').value = '192.168.1.100 (Simulated)';
+            document.getElementById('browserInfo').value = navigator.userAgent;
+
+            alert('Consent submitted successfully for: ' + signatureInput + '\n(This is a demonstration only. Actual eConsent involves secure server-side processing.)');
+
+            // Here, you would typically use fetch() or XMLHttpRequest to send this data to your backend
+            /*
+            fetch('/submit-econsent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    participantSignature: signatureInput,
+                    consentDate: document.getElementById('consentDate').value,
+                    consentTime: document.getElementById('consentTime').value,
+                    ipAddress: document.getElementById('ipAddress').value,
+                    browserInfo: document.getElementById('browserInfo').value,
+                    icfVersion: document.getElementById('icfVersion').value,
+                    // Add participant ID and investigator ID here
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Consent recorded!');
+                // Redirect or show confirmation
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an error recording your consent.');
+            });
+            */
+        }
+    </script>
+</body>
+</html>
