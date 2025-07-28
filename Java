@@ -1,0 +1,205 @@
+// ICFVersion.java
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+public class ICFVersion {
+    private String versionId; // Unique ID for this specific version
+    private String trialId;
+    private String versionNumber; // e.g., "1.0", "1.1", "2.0"
+    private String documentPath; // URL or path to the actual PDF/HTML content
+    private LocalDate approvalDate; // Date IRB/EC approved this version
+    private String approvedBy; // Name/ID of approving authority
+    private LocalDateTime uploadDateTime;
+    private String uploadedBy;
+
+    public ICFVersion(String trialId, String versionNumber, String documentPath,
+                      LocalDate approvalDate, String approvedBy, String uploadedBy) {
+        this.versionId = UUID.randomUUID().toString();
+        this.trialId = trialId;
+        this.versionNumber = versionNumber;
+        this.documentPath = documentPath;
+        this.approvalDate = approvalDate;
+        this.approvedBy = approvedBy;
+        this.uploadDateTime = LocalDateTime.now();
+        this.uploadedBy = uploadedBy;
+    }
+
+    // Getters
+    public String getVersionId() { return versionId; }
+    public String getTrialId() { return trialId; }
+    public String getVersionNumber() { return versionNumber; }
+    public String getDocumentPath() { return documentPath; }
+    public LocalDate getApprovalDate() { return approvalDate; }
+    public String getApprovedBy() { return approvedBy; }
+    public LocalDateTime getUploadDateTime() { return uploadDateTime; }
+    public String getUploadedBy() { return uploadedBy; }
+
+    @Override
+    public String toString() {
+        return "ICFVersion{" +
+               "versionId='" + versionId + '\'' +
+               ", trialId='" + trialId + '\'' +
+               ", versionNumber='" + versionNumber + '\'' +
+               ", approvalDate=" + approvalDate +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ICFVersion that = (ICFVersion) o;
+        return Objects.equals(versionId, that.versionId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(versionId);
+    }
+}
+
+// ConsentAuditEntry.java (For tracking consent events)
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public class ConsentAuditEntry {
+    private String auditId;
+    private String participantId;
+    private String icfVersionId; // Link to the specific ICF version used
+    private String eventType; // E.g., "CONSENT_INITIATED", "CONSENT_GRANTED", "CONSENT_WITHDRAWN", "ICF_REVIEWED"
+    private String actorId; // ID of the user performing the action (Investigator, Participant, System)
+    private LocalDateTime timestamp;
+    private String details; // Any additional relevant details
+
+    public ConsentAuditEntry(String participantId, String icfVersionId, String eventType, String actorId, String details) {
+        this.auditId = UUID.randomUUID().toString();
+        this.participantId = participantId;
+        this.icfVersionId = icfVersionId;
+        this.eventType = eventType;
+        this.actorId = actorId;
+        this.timestamp = LocalDateTime.now();
+        this.details = details;
+    }
+
+    // Getters
+    public String getAuditId() { return auditId; }
+    public String getParticipantId() { return participantId; }
+    public String getIcfVersionId() { return icfVersionId; }
+    public String getEventType() { return eventType; }
+    public String getActorId() { return actorId; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getDetails() { return details; }
+
+    @Override
+    public String toString() {
+        return "AuditEntry{" +
+               "timestamp=" + timestamp.toLocalTime() +
+               ", eventType='" + eventType + '\'' +
+               ", participantId='" + participantId + '\'' +
+               ", actorId='" + actorId + '\'' +
+               ", details='" + details + '\'' +
+               '}';
+    }
+}
+
+// ConsentService.java (Combines versioning and audit)
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class ConsentService {
+    private Map<String, ICFVersion> icfVersions; // Stores all ICF versions by their versionId
+    private List<ConsentAuditEntry> auditLog; // Stores all audit events (in memory for demo)
+
+    public ConsentService() {
+        this.icfVersions = new HashMap<>();
+        this.auditLog = new ArrayList<>();
+    }
+
+    public void addICFVersion(ICFVersion version) {
+        icfVersions.put(version.getVersionId(), version);
+        System.out.println("ICF Version added: " + version.getVersionNumber() + " for trial " + version.getTrialId());
+    }
+
+    public Optional<ICFVersion> getICFVersionById(String versionId) {
+        return Optional.ofNullable(icfVersions.get(versionId));
+    }
+
+    public List<ICFVersion> getAllICFVersionsForTrial(String trialId) {
+        List<ICFVersion> versions = new ArrayList<>();
+        for (ICFVersion version : icfVersions.values()) {
+            if (version.getTrialId().equals(trialId)) {
+                versions.add(version);
+            }
+        }
+        // Often, you'd sort by approval date or version number here
+        return versions;
+    }
+
+    public void logConsentEvent(String participantId, String icfVersionId, String eventType, String actorId, String details) {
+        ConsentAuditEntry entry = new ConsentAuditEntry(participantId, icfVersionId, eventType, actorId, details);
+        auditLog.add(entry);
+        System.out.println("Logged audit event: " + entry);
+    }
+
+    public List<ConsentAuditEntry> getAuditLogForParticipant(String participantId) {
+        List<ConsentAuditEntry> participantLog = new ArrayList<>();
+        for (ConsentAuditEntry entry : auditLog) {
+            if (entry.getParticipantId().equals(participantId)) {
+                participantLog.add(entry);
+            }
+        }
+        return participantLog;
+    }
+}
+
+// MainEConsentProcess.java
+import java.time.LocalDate;
+
+public class MainEConsentProcess {
+    public static void main(String[] args) {
+        ConsentService consentService = new ConsentService();
+
+        // 1. Add ICF versions to the system (by Sponsor/QA)
+        ICFVersion icfV1 = new ICFVersion(
+            "TRIAL-XYZ", "1.0", "https://econsent.com/icf/TRIAL-XYZ_V1.pdf",
+            LocalDate.of(2024, 1, 15), "IRB_ABC", "AdminUser"
+        );
+        consentService.addICFVersion(icfV1);
+
+        ICFVersion icfV2 = new ICFVersion(
+            "TRIAL-XYZ", "2.0", "https://econsent.com/icf/TRIAL-XYZ_V2.pdf",
+            LocalDate.of(2024, 6, 1), "IRB_ABC", "RegulatoryTeam"
+        );
+        consentService.addICFVersion(icfV2);
+
+        // 2. Simulate Participant Consent Process (via Investigator/eConsent System)
+        String participantId = "P-001";
+        String investigatorId = "INV-Site001";
+
+        System.out.println("\n--- Simulating P-001 Consent Process ---");
+        consentService.logConsentEvent(participantId, icfV1.getVersionId(), "CONSENT_INITIATED", investigatorId, "Participant P-001 started ICF review for V1.0");
+        consentService.logConsentEvent(participantId, icfV1.getVersionId(), "ICF_REVIEWED", participantId, "Participant P-001 completed reading ICF V1.0");
+        consentService.logConsentEvent(participantId, icfV1.getVersionId(), "QUESTIONS_ANSWERED", investigatorId, "Investigator answered P-001's questions");
+
+        // Assume consent is given for V1.0
+        consentService.logConsentEvent(participantId, icfV1.getVersionId(), "CONSENT_GRANTED", participantId, "Participant P-001 provided electronic signature for V1.0");
+
+        // 3. Simulate a participant needing to re-consent to a new version
+        String participantId2 = "P-002";
+        System.out.println("\n--- Simulating P-002 Consent Process with V2.0 ---");
+        consentService.logConsentEvent(participantId2, icfV2.getVersionId(), "CONSENT_INITIATED", investigatorId, "Participant P-002 started ICF review for V2.0");
+        consentService.logConsentEvent(participantId2, icfV2.getVersionId(), "CONSENT_GRANTED", participantId2, "Participant P-002 provided electronic signature for V2.0");
+
+        // 4. Retrieve audit log for a participant
+        System.out.println("\n--- Audit Log for P-001 ---");
+        consentService.getAuditLogForParticipant(participantId).forEach(System.out::println);
+
+        System.out.println("\n--- All ICF Versions for TRIAL-XYZ ---");
+        consentService.getAllICFVersionsForTrial("TRIAL-XYZ").forEach(System.out::println);
+    }
+}
